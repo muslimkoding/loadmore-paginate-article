@@ -71,9 +71,28 @@ Untuk membuat fitur "load more" artikel di Laravel dengan Bootstrap 5, Anda bisa
 # Langkah 1: Buat Model dan Migration
 Pertama, pastikan Anda memiliki model dan tabel untuk artikel.
 ```
-<?php
-  echo "Hello world!";
-?>
-```
-```
 php artisan make:model Article -m
+```
+Edit migration file di `database/migrations/xxxx_xx_xx_create_articles_table.php`:
+
+```
+public function up()
+{
+    Schema::create('articles', function (Blueprint $table) {
+        $table->id();
+        $table->string('title');
+        $table->text('body');
+        $table->timestamps();
+    });
+}
+```
+Jalankan migrasi untuk membuat tabel:
+```
+php artisan migrate
+```
+
+# Langkah 2: Seeder untuk Data Dummy
+Buat seeder untuk mengisi beberapa data artikel:
+```
+php artisan make:seeder ArticlesTableSeeder
+```
