@@ -68,7 +68,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ## Buat Loadmore pada halaman artikel
 Untuk membuat fitur "load more" artikel di Laravel dengan Bootstrap 5, Anda bisa mengikuti langkah-langkah berikut. Ini melibatkan backend di Laravel untuk menangani permintaan AJAX dan frontend di Bootstrap 5 untuk menampilkan artikel dan tombol "Load More".
 
-# Langkah 1: Buat Model dan Migration
+## Langkah 1: Buat Model dan Migration
 Pertama, pastikan Anda memiliki model dan tabel untuk artikel.
 ```
 php artisan make:model Article -m
@@ -91,7 +91,7 @@ Jalankan migrasi untuk membuat tabel:
 php artisan migrate
 ```
 
-# Langkah 2: Seeder untuk Data Dummy
+## Langkah 2: Seeder untuk Data Dummy
 Buat seeder untuk mengisi beberapa data artikel:
 ```
 php artisan make:seeder ArticlesTableSeeder
@@ -116,7 +116,7 @@ Setelah Data Seeder sudah siap, Berikut adalah langkah-langkah untuk membuat fac
 php artisan make:factory ArticleFactory --model=Article
 ```
 
-# Langkah 3: Mengisi Factory dengan Data
+## Langkah 3: Mengisi Factory dengan Data
 Edit file `database/factories/ArticleFactory.php` yang baru saja dibuat:
 ```
 <?php
@@ -145,7 +145,7 @@ Jalankan seeder:
 php artisan db:seed --class=ArticlesTableSeeder
 ```
 
-# Langkah 4: Route dan Controller
+## Langkah 4: Route dan Controller
 Buat controller untuk menangani permintaan artikel:
 ```
 php artisan make:controller ArticleController
@@ -183,7 +183,7 @@ Route::get('/articles', [ArticleController::class, 'index'])->name('articles.ind
 Route::post('/articles/load-more', [ArticleController::class, 'loadMore'])->name('articles.loadMore');
 ```
 
-# Langkah 5: View dan JavaScript
+## Langkah 5: View dan JavaScript
 Buat view untuk menampilkan artikel dan tombol "Load More":
 
 Edit file `resources/views/articles/index.blade.php`:
@@ -240,7 +240,7 @@ $(document).ready(function() {
 </html>
 ```
 
-# Langkah 5: Test
+## Langkah 5: Test
 Jalankan server Laravel:
 ```
 php artisan serve
