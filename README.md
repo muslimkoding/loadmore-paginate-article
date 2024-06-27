@@ -96,3 +96,156 @@ Buat seeder untuk mengisi beberapa data artikel:
 ```
 php artisan make:seeder ArticlesTableSeeder
 ```
+
+Edit seeder di `database/seeders/ArticlesTableSeeder.php`:
+```
+use App\Models\Article;
+use Illuminate\Database\Seeder;
+
+class ArticlesTableSeeder extends Seeder
+{
+    public function run()
+    {
+        Article::factory()->count(50)->create();
+    }
+}
+```
+
+Setelah Data Seeder sudah siap, Berikut adalah langkah-langkah untuk membuat factory dan mengisinya dengan data:
+```
+php artisan make:factory ArticleFactory --model=Article
+```
+
+# Langkah 3: Mengisi Factory dengan Data
+Edit file `database/factories/ArticleFactory.php` yang baru saja dibuat:
+```
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Article;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class ArticleFactory extends Factory
+{
+    protected $model = Article::class;
+
+    public function definition()
+    {
+        return [
+            'title' => $this->faker->sentence,
+            'body' => $this->faker->paragraph,
+        ];
+    }
+}
+```
+Setelah `ArticelTableSeeder` dan `ArticleFactory` sudah siap
+Jalankan seeder:
+```
+php artisan db:seed --class=ArticlesTableSeeder
+```
+
+# Langkah 4: Route dan Controller
+Buat controller untuk menangani permintaan artikel:
+```
+php artisan make:controller ArticleController
+```
+
+Edit controller di `app/Http/Controllers/ArticleController.php`:
+```
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Article;
+
+class ArticleController extends Controller
+{
+    public function index()
+    {
+        return view('articles.index');
+    }
+
+    public function loadMore(Request $request)
+    {
+        if ($request->ajax()) {
+            $articles = Article::latest()->skip($request->skip)->take(5)->get();
+            return response()->json($articles);
+        }
+    }
+}
+```
+
+Tambahkan route di `routes/web.php`:
+```
+use App\Http\Controllers\ArticleController;
+
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
+Route::post('/articles/load-more', [ArticleController::class, 'loadMore'])->name('articles.loadMore');
+```
+
+# Langkah 5: View dan JavaScript
+Buat view untuk menampilkan artikel dan tombol "Load More":
+
+Edit file `resources/views/articles/index.blade.php`:
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Articles</h1>
+    <div id="article-container">
+        <!-- Articles will be loaded here -->
+    </div>
+    <button id="load-more" class="btn btn-primary mt-4">Load More</button>
+</div>
+
+<script>
+$(document).ready(function() {
+    var skip = 0;
+    loadArticles(skip);
+
+    $('#load-more').click(function() {
+        skip += 5;
+        loadArticles(skip);
+    });
+
+    function loadArticles(skip) {
+        $.ajax({
+            url: '{{ route("articles.loadMore") }}',
+            type: 'POST',
+            data: {
+                skip: skip,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(data) {
+                if (data.length == 0) {
+                    $('#load-more').hide();
+                }
+                $.each(data, function(index, article) {
+                    $('#article-container').append('<div class="card mt-3"><div class="card-body"><h5 class="card-title">' + article.title + '</h5><p class="card-text">' + article.body + '</p></div></div>');
+                });
+            }
+        });
+    }
+});
+</script>
+</body>
+</html>
+```
+
+# Langkah 5: Test
+Jalankan server Laravel:
+```
+php artisan serve
+```
+
+Buka browser dan akses `http://127.0.0.1:8000/articles`. Anda akan melihat artikel dimuat dan tombol "Load More" di bawahnya untuk memuat lebih banyak artikel.
+
+Dengan mengikuti langkah-langkah di atas, Anda akan memiliki fitur "load more" artikel yang bekerja dengan Laravel di backend dan Bootstrap 5 di frontend.
