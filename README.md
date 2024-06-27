@@ -66,3 +66,7 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ## Buat Loadmore pada halaman artikel
+Untuk membuat fitur "load more" artikel di Laravel dengan Bootstrap 5, Anda bisa mengikuti langkah-langkah berikut. Ini melibatkan backend di Laravel untuk menangani permintaan AJAX dan frontend di Bootstrap 5 untuk menampilkan artikel dan tombol "Load More".
+
+# Langkah 1: Buat Model dan Migration
+Pertama, pastikan Anda memiliki model dan tabel untuk artikel.
