@@ -70,6 +70,7 @@ Untuk membuat fitur "load more" artikel di Laravel dengan Bootstrap 5, Anda bisa
 
 # Langkah 1: Buat Model dan Migration
 Pertama, pastikan Anda memiliki model dan tabel untuk artikel.
-<?php
+```<?php
         echo "Hello world!";
     ?>
+```
